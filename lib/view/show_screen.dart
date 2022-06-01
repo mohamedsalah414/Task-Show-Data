@@ -44,229 +44,233 @@ class _ShowDataState extends State<ShowData> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return FutureBuilder<DataModel>(
-        future: futureData,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print(snapshot.error);
-          }
-          if (snapshot.hasData) {
-            var str = snapshot.data!.date;
-            var newStr = str.substring(0, 10) + ' ' + str.substring(11, 23);
-            DateTime dt = DateTime.parse(newStr);
-            return Scaffold(
-              appBar: AppBar(
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                leading: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.arrow_back_ios),
+    return Scaffold(
+      body: FutureBuilder<DataModel>(
+          future: futureData,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
+              return Text('Error');
+
+            }
+            if (snapshot.hasData) {
+              var str = snapshot.data!.date;
+              var newStr = str.substring(0, 10) + ' ' + str.substring(11, 23);
+              DateTime dt = DateTime.parse(newStr);
+              return Scaffold(
+                appBar: AppBar(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  leading: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.arrow_back_ios),
+                  ),
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.share_outlined),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(snapshot.data!.isLiked
+                          ? Icons.star
+                          : Icons.star_border),
+                    ),
+                  ],
                 ),
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.share_outlined),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(snapshot.data!.isLiked
-                        ? Icons.star
-                        : Icons.star_border),
-                  ),
-                ],
-              ),
-              extendBody: true,
-              extendBodyBehindAppBar: true,
-              body: ListView(
-                padding: EdgeInsets.zero,
-                physics: const AlwaysScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: [
-                  SizedBox(
-                    height: size.height / 3.5,
-                    child: _buildCarouselSlider(size, snapshot),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '# ${snapshot.data!.interest}',
-                          style: TextStyle(
-                              fontFamily: 'Cairo',
-                              color: Colors.grey.shade400,
-                              fontWeight: FontWeight.w300,
-                              fontSize: 17),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          snapshot.data!.title,
-                          style: TextStyle(
-                              fontFamily: 'Cairo',
-                              color: Colors.grey.shade500,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.calendar,
-                              color: Colors.grey.shade400,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              DateFormat("EEE, d MMM yyyy hh:mm a", 'ar')
-                                  .format(dt),
-                              style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  color: Colors.grey.shade400,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.pin,
-                              color: Colors.grey.shade400,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(snapshot.data!.address,
+                extendBody: true,
+                extendBodyBehindAppBar: true,
+                body: ListView(
+                  padding: EdgeInsets.zero,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: [
+                    SizedBox(
+                      height: size.height / 3.5,
+                      child: _buildCarouselSlider(size, snapshot),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '# ${snapshot.data!.interest}',
+                            style: TextStyle(
+                                fontFamily: 'Cairo',
+                                color: Colors.grey.shade400,
+                                fontWeight: FontWeight.w300,
+                                fontSize: 17),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            snapshot.data!.title,
+                            style: TextStyle(
+                                fontFamily: 'Cairo',
+                                color: Colors.grey.shade500,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                CupertinoIcons.calendar,
+                                color: Colors.grey.shade400,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                DateFormat("EEE, d MMM yyyy hh:mm a", 'ar')
+                                    .format(dt),
                                 style: TextStyle(
                                     fontFamily: 'Cairo',
                                     color: Colors.grey.shade400,
                                     fontSize: 15,
-                                    fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                        Divider(
-                          color: Colors.grey.shade200,
-                          height: 30,
-                          thickness: 2,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            CircleAvatar(
-                              child: ClipOval(
-                                child: Image.network(
-                                  snapshot.data!.trainerImg,
-                                  fit: BoxFit.fill,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: size.width,
-                                      decoration: const BoxDecoration(
-                                          shape: BoxShape.circle),
-                                      child: Image.asset(
-                                        'assets/images/error-image-generic.png',
-                                        fit: BoxFit.fill,
-                                      ),
-                                    );
-                                  },
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                CupertinoIcons.pin,
+                                color: Colors.grey.shade400,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(snapshot.data!.address,
+                                  style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      color: Colors.grey.shade400,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)),
+                            ],
+                          ),
+                          Divider(
+                            color: Colors.grey.shade200,
+                            height: 30,
+                            thickness: 2,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                child: ClipOval(
+                                  child: Image.network(
+                                    snapshot.data!.trainerImg,
+                                    fit: BoxFit.fill,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        width: size.width,
+                                        decoration: const BoxDecoration(
+                                            shape: BoxShape.circle),
+                                        child: Image.asset(
+                                          'assets/images/error-image-generic.png',
+                                          fit: BoxFit.fill,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            buildTextTitle(snapshot.data!.trainerName),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        buildTextSubTitle(snapshot.data!.trainerInfo),
-                        Divider(
-                          color: Colors.grey.shade200,
-                          height: 30,
-                          thickness: 2,
-                        ),
-                        buildTextTitle('عن المغامرة'),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        buildTextSubTitle(snapshot.data!.occasionDetail),
-                        Divider(
-                          color: Colors.grey.shade200,
-                          height: 30,
-                          thickness: 2,
-                        ),
-                        buildTextTitle('سعر المغامرة'),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        buildTextSubTitle(snapshot.data!.price.toString()),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Divider(
-                          color: Colors.grey.shade200,
-                          height: 30,
-                          thickness: 2,
-                        ),
-                        buildTextTitle('انواع الحجز'),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        SizedBox(
-                          height: 120,
-                          width: size.width,
-                          child:ListView.builder(
-                            padding: EdgeInsets.zero,
-                              scrollDirection: Axis.vertical,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: snapshot.data!.reservTypes.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index)
-                              {
-                                return Card(
-                                  elevation: 2,
-                                  child: ListTile(
-                                    title: buildTextTitle(snapshot.data!.reservTypes[index].name),
-                                    subtitle:buildTextSubTitle(' العدد : ${snapshot.data!.reservTypes[index].count.toString()}'),
-                                    trailing: buildTextSubTitle(' السعر : ${snapshot.data!.reservTypes[index].price.toString()}'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              buildTextTitle(snapshot.data!.trainerName),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          buildTextSubTitle(snapshot.data!.trainerInfo),
+                          Divider(
+                            color: Colors.grey.shade200,
+                            height: 30,
+                            thickness: 2,
+                          ),
+                          buildTextTitle('عن المغامرة'),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          buildTextSubTitle(snapshot.data!.occasionDetail),
+                          Divider(
+                            color: Colors.grey.shade200,
+                            height: 30,
+                            thickness: 2,
+                          ),
+                          buildTextTitle('سعر المغامرة'),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          buildTextSubTitle(snapshot.data!.price.toString()),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Divider(
+                            color: Colors.grey.shade200,
+                            height: 30,
+                            thickness: 2,
+                          ),
+                          buildTextTitle('انواع الحجز'),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SizedBox(
+                            height: 120,
+                            width: size.width,
+                            child:ListView.builder(
+                                padding: EdgeInsets.zero,
+                                scrollDirection: Axis.vertical,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: snapshot.data!.reservTypes.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index)
+                                {
+                                  return Card(
+                                    elevation: 2,
+                                    child: ListTile(
+                                      title: buildTextTitle(snapshot.data!.reservTypes[index].name),
+                                      subtitle:buildTextSubTitle(' العدد : ${snapshot.data!.reservTypes[index].count.toString()}'),
+                                      trailing: buildTextSubTitle(' السعر : ${snapshot.data!.reservTypes[index].price.toString()}'),
 
-                                  ),
-                                );
-                              }),
-                        ),
+                                    ),
+                                  );
+                                }),
+                          ),
 
-                        SizedBox(
-                          height: 65,
-                          width: size.width,
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text(
-                                'قم بالحجز الان',
-                                style: TextStyle(
-                                    fontFamily: 'Cairo',
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              )),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        });
+                          SizedBox(
+                            height: 65,
+                            width: size.width,
+                            child: ElevatedButton(
+                                onPressed: () {},
+                                child: const Text(
+                                  'قم بالحجز الان',
+                                  style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 20, fontWeight: FontWeight.bold),
+                                )),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          }),
+    );
   }
 
   Text buildTextSubTitle(String txt) {
