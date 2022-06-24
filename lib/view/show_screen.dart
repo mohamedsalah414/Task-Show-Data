@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:taskfetchdata/view/show_video_screen.dart';
 
 import '../model/data_model.dart';
 
@@ -67,8 +68,10 @@ class _ShowDataState extends State<ShowData> {
                   ),
                   actions: [
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.share_outlined),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPlayerScreen()));
+                      },
+                      icon: const Icon(Icons.video_collection_outlined),
                     ),
                     IconButton(
                       onPressed: () {},
@@ -81,11 +84,13 @@ class _ShowDataState extends State<ShowData> {
                 extendBody: true,
                 extendBodyBehindAppBar: true,
                 body: ListView(
+
                   padding: EdgeInsets.zero,
                   physics: const AlwaysScrollableScrollPhysics(),
                   shrinkWrap: true,
                   children: [
                     SizedBox(
+
                       height: size.height / 3.5,
                       child: _buildCarouselSlider(size, snapshot),
                     ),
